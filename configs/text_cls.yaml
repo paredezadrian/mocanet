@@ -12,7 +12,7 @@ model:
 training:
   batch_size: 16  # Smaller batches for text
   max_steps: 2000
-  learning_rate: 1e-3
+  learning_rate: 5e-5  # Lower learning rate for stability
   warmup_steps: 100
 
 data:
@@ -23,7 +23,8 @@ data:
 
 # Text classification specific
 text_cls:
-  dataset: "sst2_tiny"  # Subset of SST-2
-  max_samples: 10000
+  dataset: "sst2"  # Full Stanford SST-2 dataset
+  use_real_sst2: true  # Use real SST-2 from Hugging Face
+  max_samples: 100000  # Increased for full dataset
   min_freq: 2  # Minimum token frequency
   pretrained_embeddings: false

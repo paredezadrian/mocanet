@@ -1,4 +1,4 @@
-.PHONY: setup lint fmt test train ablate demo clean help
+.PHONY: setup lint fmt test train ablate demo clean help test-sst2 debug-sst2
 
 help:  ## Show this help message
 	@echo 'Usage: make [target]'
@@ -52,3 +52,9 @@ run-copy:  ## Quick copy task training run
 
 run-text:  ## Quick text classification run
 	. venv/bin/activate && python -m mocanet.train --config-name=text_cls training.max_steps=500
+
+test-sst2:  ## Test SST-2 dataset loading
+	. venv/bin/activate && python scripts/test_sst2.py
+
+debug-sst2:  ## Debug SST-2 data and model
+	. venv/bin/activate && python scripts/debug_data.py

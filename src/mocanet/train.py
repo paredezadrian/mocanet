@@ -2,6 +2,7 @@
 
 import os
 import time
+import logging
 from typing import Dict, Any, Optional
 import torch
 import torch.nn as nn
@@ -14,6 +15,8 @@ from rich.console import Console
 from rich.progress import Progress, TextColumn, BarColumn, TimeElapsedColumn
 from rich.table import Table
 from rich.panel import Panel
+
+logger = logging.getLogger(__name__)
 
 from .config import Config
 from .model import MOCANet
@@ -48,6 +51,9 @@ class Trainer:
         self.global_step = 0
         self.best_val_metric = 0.0
         self.training_history = []
+        
+        # Initialize training iterator
+        self.train_iter = iter(self.train_loader)
         
         # Create output directory
         os.makedirs("runs", exist_ok=True)
@@ -102,7 +108,7 @@ class Trainer:
         self,
         outputs: Dict[str, torch.Tensor],
         targets: torch.Tensor,
-    ) -> torch.Tensor:
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """Compute loss for the current batch."""
         if self.config.data.task == "copy":
             # Language modeling loss
@@ -171,6 +177,14 @@ class Trainer:
         self.optimizer.zero_grad()
         total_loss.backward()
         
+        # Debug gradients
+        total_norm = 0
+        for p in self.model.parameters():
+            if p.grad is not None:
+                param_norm = p.grad.data.norm(2)
+                total_norm += param_norm.item() ** 2
+        total_norm = total_norm ** (1. / 2)
+        
         # Gradient clipping
         torch.nn.utils.clip_grad_norm_(
             self.model.parameters(),
@@ -181,6 +195,22 @@ class Trainer:
         self.optimizer.step()
         self.scheduler.step()
         
+        # Debug: check if loss becomes NaN
+        if torch.isnan(total_loss) or torch.isinf(total_loss):
+            logger.warning(f"Loss became NaN/Inf at step {self.global_step}")
+            return {
+                "total_loss": 0.0,
+                "task_loss": 0.0,
+                "budget_loss": 0.0,
+                "expert_usage": outputs["expert_usage"].item(),
+                "memory_usage": outputs["memory_usage"].item(),
+                "gradient_norm": total_norm,
+            }
+        
+        # Debug: log actual loss values
+        if self.global_step % 10 == 0:  # Log every 10 steps
+            logger.info(f"Step {self.global_step}: loss={total_loss.item():.6f}, task_loss={task_loss.item():.6f}, budget_loss={budget_loss.item():.6f}")
+        
         # Return metrics
         return {
             "total_loss": total_loss.item(),
@@ -188,6 +218,7 @@ class Trainer:
             "budget_loss": budget_loss.item(),
             "expert_usage": outputs["expert_usage"].item(),
             "memory_usage": outputs["memory_usage"].item(),
+            "gradient_norm": total_norm,
         }
     
     def _validate(self) -> Dict[str, float]:
@@ -279,7 +310,8 @@ class Trainer:
                 if step % self.config.training.save_every == 0:
                     self._save_checkpoint(step)
                 
-                self.global_step = step
+                # Increment global step
+                self.global_step += 1
         
         # Final validation
         final_val_metrics = self._validate()

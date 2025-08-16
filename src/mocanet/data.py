@@ -7,6 +7,10 @@ from typing import List, Tuple, Optional, Dict
 import torch
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
+import logging
+from .sst2_dataset import SST2DataManager
+
+logger = logging.getLogger(__name__)
 
 
 class CopyTaskDataset(Dataset):
@@ -172,11 +176,34 @@ class DataManager:
     
     def create_text_classification_data(self) -> Tuple[DataLoader, DataLoader]:
         """Create text classification data loaders."""
+        
+        # Check if we should use real SST-2 dataset
+        if hasattr(self.config.text_cls, 'use_real_sst2') and self.config.text_cls.use_real_sst2:
+            try:
+                logger.info("Using real Stanford SST-2 dataset from Hugging Face")
+                sst2_manager = SST2DataManager(self.config)
+                train_loader, val_loader, test_loader = sst2_manager.create_data_loaders()
+                
+                # Update vocab info
+                vocab_info = sst2_manager.get_vocab_info()
+                self.vocab = vocab_info['vocab']
+                self.vocab_size = vocab_info['vocab_size']
+                
+                return train_loader, val_loader
+            except Exception as e:
+                logger.warning(f"Failed to load real SST-2 dataset: {e}")
+                logger.warning("Falling back to synthetic data")
+                return self._create_synthetic_text_classification_data()
+        else:
+            return self._create_synthetic_text_classification_data()
+    
+    def _create_synthetic_text_classification_data(self) -> Tuple[DataLoader, DataLoader]:
+        """Create text classification data loaders with synthetic data."""
         # Create a simple vocabulary
         self.vocab = self._create_vocab()
         self.vocab_size = len(self.vocab)
         
-        # Generate synthetic text data (since we can't download real SST-2)
+        # Generate synthetic text data
         texts, labels = self._generate_synthetic_text_data()
         
         # Split into train/val

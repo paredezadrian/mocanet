@@ -49,7 +49,7 @@ Input → Token Router → [Experts + Memory] → Combined Output → Task Head
 - **Memory Bank**: Provides external memory with attention-based read/write operations for persistent information storage
 - **Budget Loss**: Continuously monitors and optimizes resource usage during training
 
-For a comprehensive understanding of the mathematical foundations, refer to [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+For a comprehensive understanding of the mathematical foundations, refer to [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). For detailed information about the Stanford SST-2 dataset integration, see [docs/SST2_INTEGRATION.md](docs/SST2_INTEGRATION.md).
 
 ## Performance Targets
 
@@ -89,12 +89,16 @@ MOCA-Net provides several training configurations to suit different research nee
 # Train on copy task (default configuration)
 make train
 
-# Train on text classification task
+# Train on text classification task (real SST-2 dataset)
 make demo
 
 # Quick training runs for rapid experimentation
 make run-copy    # 1000 steps on copy task
 make run-text    # 500 steps on text classification
+
+# Test and debug SST-2 dataset integration
+make test-sst2   # Test SST-2 dataset loading
+make debug-sst2  # Debug data and model outputs
 ```
 
 ### Model Evaluation
@@ -126,7 +130,7 @@ MOCA-Net employs YAML-based configuration management powered by Hydra, enabling 
 
 - **base.yaml**: Core model architecture and training parameters
 - **copy_task.yaml**: Task-specific settings for copy/recall experiments
-- **text_cls.yaml**: Configuration for text classification tasks
+- **text_cls.yaml**: Configuration for text classification tasks with real Stanford SST-2 dataset
 
 ### Key Configuration Parameters
 
@@ -144,6 +148,13 @@ training:
   learning_rate: 1e-3       # Learning rate
   warmup_steps: 200         # Learning rate warmup steps
   gradient_clip_norm: 1.0   # Gradient clipping norm
+
+# SST-2 Dataset Configuration
+text_cls:
+  use_real_sst2: true       # Use real Stanford SST-2 dataset
+  dataset: "sst2"           # Full Stanford SST-2 dataset
+  min_freq: 2               # Minimum token frequency for vocabulary
+  max_vocab_size: 10000     # Maximum vocabulary size
 ```
 
 ## Expected Results
@@ -154,9 +165,10 @@ training:
 - **Memory Usage**: <4GB RAM
 
 ### Text Classification Performance
-- **Target Accuracy**: ≥80% on synthetic SST-2 subset
-- **Expected Runtime**: ≤5 minutes on CPU
-- **Dataset Size**: 10,000 synthetic samples
+- **Target Accuracy**: ≥95% on Stanford SST-2 dataset
+- **Expected Runtime**: ≤10 minutes on CPU for 500 steps, ~6.5 minutes for 2000 steps
+- **Dataset Size**: 67,349 training samples, 872 validation samples, 1,821 test samples
+- **Real Dataset**: Full Stanford Sentiment Treebank v2 (SST-2) from Hugging Face
 
 ## Ablation Studies
 

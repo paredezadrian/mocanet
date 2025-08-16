@@ -165,7 +165,6 @@ class MOCANet(nn.Module):
         # Task-specific output
         if hasattr(self, 'classifier'):
             # Classification
-            logits = self.classifier(output)
             # Use mean pooling over sequence
             if attention_mask is not None:
                 pooled_output = (output * attention_mask.unsqueeze(-1)).sum(dim=1) / attention_mask.sum(dim=1, keepdim=True)
