@@ -1,5 +1,7 @@
 # MOCA-Net: Memory-Orchestrated Context Allocation Network
 
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 A novel neural network architecture that combines sparse mixture-of-experts, external memory, and budget-aware computation for efficient sequence modeling.
 
 ## 🚀 Quick Start
@@ -244,7 +246,15 @@ Training progress is logged with:
 
 ## 📄 License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License** (CC BY-NC-SA 4.0).
+
+**What this means:**
+- ✅ **You can share and adapt** this work freely
+- ✅ **You must give attribution** to the original author
+- ❌ **You cannot use it for commercial purposes**
+- ✅ **You must share adaptations** under the same license
+
+See the [LICENSE](LICENSE) file for full details, or visit [Creative Commons](https://creativecommons.org/licenses/by-nc-sa/4.0/) for more information.
 
 ## 🙏 Acknowledgments
 
