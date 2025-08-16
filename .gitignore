@@ -208,6 +208,7 @@ runs/
 *.pth
 *.ckpt
 *.safetensors
+IMPLEMENTATION_SUMMARY.md
 
 # Logs
 *.log
