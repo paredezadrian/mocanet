@@ -22,6 +22,9 @@ fmt:  ## Format code with black and ruff
 test:  ## Run tests with coverage
 	. venv/bin/activate && python -m pytest tests/ -v --cov=src/mocanet --cov-report=term-missing
 
+test-interactive:  ## Test interactive inference functionality
+	. venv/bin/activate && python -m pytest tests/test_interactive_inference.py -v
+
 train:  ## Train MOCA-Net on copy task (fast CPU run)
 	. venv/bin/activate && python -m mocanet.train --config-name=copy_task
 
@@ -58,3 +61,12 @@ test-sst2:  ## Test SST-2 dataset loading
 
 debug-sst2:  ## Debug SST-2 data and model
 	. venv/bin/activate && python scripts/debug_data.py
+
+chat:  ## Interactive chat with trained SST-2 model
+	. venv/bin/activate && python scripts/interactive_inference.py runs/mocanet_final.pt
+
+demo-interactive:  ## Show interactive inference demo
+	. venv/bin/activate && python scripts/demo_interactive.py
+
+test-quality:  ## Test model quality and compare checkpoints
+	. venv/bin/activate && python scripts/test_model_quality.py
