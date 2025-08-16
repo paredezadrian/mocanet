@@ -237,3 +237,14 @@ Output: Trained model
 2. **Tuning**: Requires careful tuning of routing parameters
 3. **Memory**: External memory bank increases memory footprint
 4. **Training**: Budget loss can be sensitive to hyperparameters
+
+## Interactive Inference
+
+The MOCA-Net architecture supports real-time interactive inference for sentiment analysis:
+
+- **Efficient Forward Pass**: O(L) complexity enables real-time text processing
+- **Confidence Scoring**: Probability distributions for prediction reliability
+- **Memory Persistence**: External memory maintains context across interactions
+- **Quality Assurance**: Built-in model quality testing and checkpoint comparison
+
+For comprehensive interactive inference usage, see [docs/INTERACTIVE_INFERENCE.md](INTERACTIVE_INFERENCE.md).

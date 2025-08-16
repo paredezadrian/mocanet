@@ -38,3 +38,15 @@
 - **Budget Awareness**: Differentiable loss term encourages efficient resource usage
 - **Modularity**: Easy to disable components for ablation studies
 - **Stability**: LayerNorm, residual connections, and gradient clipping for reliable training
+- **Interactive Ready**: Architecture designed for real-time inference and user interaction
+
+## Interactive Inference Support
+
+The MOCA-Net design decisions directly support interactive inference capabilities:
+
+- **Sparse Routing**: Enables real-time text processing with O(L) complexity
+- **External Memory**: Maintains context and improves prediction quality
+- **Modular Design**: Allows easy testing and quality assurance
+- **CPU-Friendly**: Sparse operations make it suitable for interactive use
+
+For comprehensive interactive inference usage, see [docs/INTERACTIVE_INFERENCE.md](INTERACTIVE_INFERENCE.md).

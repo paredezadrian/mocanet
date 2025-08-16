@@ -292,6 +292,17 @@ python scripts/debug_data.py
 3. **Ablation Studies**: Component analysis on real data
 4. **Hyperparameter Optimization**: Automated hyperparameter tuning
 
+## Interactive Inference
+
+The SST-2 integration enables interactive sentiment analysis through the MOCA-Net interactive inference system:
+
+- **Real-time Analysis**: Input any text and get instant sentiment predictions
+- **Quality Assurance**: Built-in model quality testing with `make test-quality`
+- **Rich Interface**: Beautiful terminal-based chat interface with `make chat`
+- **Confidence Scoring**: Probability distributions and confidence levels for predictions
+
+For comprehensive interactive inference usage, see [docs/INTERACTIVE_INFERENCE.md](INTERACTIVE_INFERENCE.md).
+
 ## References
 
 - **Stanford SST-2 Paper**: [Recursive Deep Models for Semantic Compositionality](https://nlp.stanford.edu/~socherr/EMNLP2013_RNTN.pdf)
