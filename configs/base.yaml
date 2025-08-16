@@ -1,0 +1,49 @@
+defaults:
+  - _self_
+
+# Model Architecture
+model:
+  embedding_dim: 128
+  num_experts: 4
+  num_memory_slots: 32
+  top_k_experts: 2
+  num_memory_heads: 1
+  router_temperature: 1.0
+  budget_loss_weight: 0.05
+  dropout: 0.1
+  layer_norm_eps: 1e-5
+
+# Training
+training:
+  batch_size: 32
+  max_steps: 5000
+  learning_rate: 1e-3
+  weight_decay: 1e-4
+  warmup_steps: 200
+  gradient_clip_norm: 1.0
+  save_every: 1000
+  eval_every: 500
+
+# Data
+data:
+  sequence_length: 60
+  vocab_size: 128
+  num_classes: 2  # For classification tasks
+
+# Logging
+logging:
+  log_every: 100
+  tensorboard: true
+  rich_progress: true
+
+# Hardware
+hardware:
+  device: auto  # auto, cpu, cuda
+  num_workers: 0  # 0 for CPU training
+  pin_memory: false
+
+# Seeds
+seeds:
+  random: 42
+  torch: 42
+  numpy: 42

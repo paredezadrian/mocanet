@@ -1,0 +1,29 @@
+defaults:
+  - base
+
+# Override for text classification
+model:
+  embedding_dim: 256  # Larger embeddings for text
+  num_experts: 6
+  num_memory_slots: 32
+  top_k_experts: 3
+  num_memory_heads: 1
+
+training:
+  batch_size: 16  # Smaller batches for text
+  max_steps: 2000
+  learning_rate: 1e-3
+  warmup_steps: 100
+
+data:
+  task: "text_classification"
+  sequence_length: 128
+  vocab_size: 10000
+  num_classes: 2  # Binary classification (SST-2)
+
+# Text classification specific
+text_cls:
+  dataset: "sst2_tiny"  # Subset of SST-2
+  max_samples: 10000
+  min_freq: 2  # Minimum token frequency
+  pretrained_embeddings: false

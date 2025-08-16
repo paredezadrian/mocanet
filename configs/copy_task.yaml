@@ -1,0 +1,27 @@
+defaults:
+  - base
+
+# Override for copy task
+model:
+  embedding_dim: 128
+  num_experts: 4
+  num_memory_slots: 64  # More memory for copy task
+  top_k_experts: 2
+  num_memory_heads: 2
+
+training:
+  batch_size: 64  # Larger batches for copy task
+  max_steps: 3000  # Faster convergence expected
+  learning_rate: 5e-4  # Slightly lower LR for stability
+
+data:
+  task: "copy"
+  sequence_length: 60
+  vocab_size: 128
+  delay_tokens: 5  # Number of delay tokens between input and output
+
+# Copy task specific
+copy_task:
+  min_length: 10
+  max_length: 60
+  delay_range: [3, 8]  # Random delay between 3-8 tokens
